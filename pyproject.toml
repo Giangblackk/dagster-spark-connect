@@ -1,29 +1,6 @@
-[tool.pyprojectx]
-main = ["pdm"]
-
-[tool.pdm]
-distribution = true
-
-[project]
-name = "dagster-spark-connect"
-version = "0.1.0"
-description = "Package for Spark Connect Dagster framework components."
-authors = [{ name = "giangblackk", email = "giangblackk@gmail.com" }]
-dependencies = ["dagster", "pyspark>=3.4"]
-requires-python = ">=3.8,<3.13"
-readme = "README.md"
-license = { text = "Apache-2.0" }
-classifiers = [
-    "License :: OSI Approved :: Apache Software License",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-]
-
-[project.urls]
-Homepage = "https://github.com/Giangblackk/dagster-spark-connect"
-
 [build-system]
-requires = ["pdm-backend"]
-build-backend = "pdm.backend"
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.dagster]
+module_name = "dagster_spark_connect"
