@@ -5,7 +5,8 @@ setup(
     packages=find_packages(exclude=["dagster_spark_connect_tests"]),
     install_requires=[
         "dagster",
-        "dagster-cloud"
+        "pyspark[connect]==3.5.1",
+        "dagster_pyspark",
     ],
     extras_require={"dev": ["dagster-webserver", "pytest"]},
 )
