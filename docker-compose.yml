@@ -1,0 +1,14 @@
+# version is now using "compose spec"
+# v2 and v3 are now combined!
+# docker-compose v1.27+ required
+
+services:
+  spark-connect:
+    image: spark:3.5.1-python3
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spark-connect
+    ports:
+      - "15002:15002"
+      - "4040:4040"
