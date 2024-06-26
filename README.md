@@ -18,7 +18,30 @@ References:
 
 This is a [Dagster](https://dagster.io/) project scaffolded with [`dagster project scaffold`](https://docs.dagster.io/getting-started/create-new-project).
 
-First, install your Dagster code location as a Python package. By using the --editable flag, pip will install your Python package in ["editable mode"](https://pip.pypa.io/en/latest/topics/local-project-installs/#editable-installs) so that as you develop, local code changes will automatically apply.
+### Environment setup
+
+First, start Spark Connect Server container with `docker compose`:
+
+```bash
+docker compose up -d
+```
+
+You should found a new container named `spark-connect` when list running containers:
+
+```bash
+# if you use Docker
+docker ps
+# if you use Podman
+podman ps
+```
+
+This `spark-connect` container exposes 2 ports:
+- Port `4040` for Spark Web UI, you can access via address `localhost:4040` and
+- Port `15002` for Spark Connect Server.
+
+### Project setup
+
+Second, install your Dagster code location as a Python package. By using the --editable flag, pip will install your Python package in ["editable mode"](https://pip.pypa.io/en/latest/topics/local-project-installs/#editable-installs) so that as you develop, local code changes will automatically apply.
 
 ```bash
 pip install -e ".[dev]"
@@ -31,8 +54,6 @@ dagster dev
 ```
 
 Open http://localhost:3000 with your browser to see the project.
-
-You can start writing assets in `dagster_spark_connect/assets.py`. The assets are automatically loaded into the Dagster code location as you define them.
 
 ## Development
 
