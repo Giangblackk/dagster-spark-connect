@@ -23,6 +23,7 @@ This is a [Dagster](https://dagster.io/) project scaffolded with [`dagster proje
 First, start Spark Connect Server container with `docker compose`:
 
 ```bash
+cd dagster-spark-connect
 docker compose up -d
 ```
 
@@ -38,6 +39,13 @@ podman ps
 This `spark-connect` container exposes 2 ports:
 - Port `4040` for Spark Web UI, you can access via address `localhost:4040` and
 - Port `15002` for Spark Connect Server.
+
+Then create new virtual environment for the project:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
 
 ### Project setup
 
