@@ -1,5 +1,6 @@
 from dagster import asset
-from pyspark.sql import DataFrame, Row
+from pyspark.sql import Row
+from pyspark.sql.connect.dataframe import DataFrame
 from pyspark.sql.types import IntegerType, StringType, StructField, StructType
 
 from .resources import PySparkConnectResource
