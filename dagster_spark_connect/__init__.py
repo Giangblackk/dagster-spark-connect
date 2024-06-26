@@ -1,12 +1,14 @@
-from dagster import (ConfigurableIOManager, Definitions,
-                     load_assets_from_modules)
+from dagster import ConfigurableIOManager, Definitions, load_assets_from_modules
+from pyspark.sql.connect.dataframe import DataFrame
 
 from . import assets
 from .resources import PySparkConnectResource
 
 all_assets = load_assets_from_modules([assets])
 
-pyspark_resource = PySparkConnectResource(spark_config={"spark.app.name": "dagster"})
+pyspark_resource = PySparkConnectResource(
+    spark_remote="sc://localhost", spark_config={}
+)
 
 
 class ParquetIOManager(ConfigurableIOManager):
@@ -18,8 +20,8 @@ class ParquetIOManager(ConfigurableIOManager):
             [context.resource_config["path_prefix"], *context.asset_key.path]
         )
 
-    def handle_output(self, context, obj):
-        obj.write.parquet(self._get_path(context))
+    def handle_output(self, context, obj: DataFrame):
+        obj.write.parquet(self._get_path(context), mode="overwrite")
 
     def load_input(self, context):
         spark = self.pyspark.spark_session
@@ -30,6 +32,8 @@ defs = Definitions(
     assets=all_assets,
     resources={
         "pyspark": pyspark_resource,
-        "io_manager": ParquetIOManager(pyspark=pyspark_resource, path_prefix="/opt/spark/work-dir"),
+        "io_manager": ParquetIOManager(
+            pyspark=pyspark_resource, path_prefix="/opt/spark/work-dir"
+        ),
     },
 )

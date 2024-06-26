@@ -2,8 +2,7 @@ from typing import Any, Dict
 
 import dagster._check as check
 from dagster import ConfigurableResource, resource
-from dagster._core.definitions.resource_definition import \
-    dagster_maintained_resource
+from dagster._core.definitions.resource_definition import dagster_maintained_resource
 from dagster._core.execution.context.init import InitResourceContext
 from dagster_spark.configs_spark import spark_config
 from dagster_spark.utils import flatten_dict
@@ -11,14 +10,14 @@ from pydantic import PrivateAttr
 from pyspark.sql import SparkSession
 
 
-def spark_session_from_config(spark_conf=None):
+def spark_session_from_config(spark_remote, spark_conf=None):
     spark_conf = check.opt_dict_param(spark_conf, "spark_conf")
     builder = SparkSession.builder
     flat = flatten_dict(spark_conf)
     for key, value in flat:
         builder = builder.config(key, value)
 
-    return builder.remote("sc://localhost").getOrCreate()
+    return builder.remote(spark_remote).getOrCreate()
 
 
 class PySparkConnectResource(ConfigurableResource):
@@ -36,6 +35,7 @@ class PySparkConnectResource(ConfigurableResource):
             @job(
                 resource_defs={
                     "pyspark": PySparkConnectResource(
+                        spark_remote="sc://localhost",
                         spark_config={
                             "spark.executor.memory": "2g"
                         }
@@ -46,6 +46,7 @@ class PySparkConnectResource(ConfigurableResource):
                 my_op()
     """
 
+    spark_remote: str
     spark_config: Dict[str, Any]
     _spark_session = PrivateAttr(default=None)
 
@@ -54,7 +55,9 @@ class PySparkConnectResource(ConfigurableResource):
         return True
 
     def setup_for_execution(self, context: InitResourceContext) -> None:
-        self._spark_session = spark_session_from_config(self.spark_config)
+        self._spark_session = spark_session_from_config(
+            self.spark_remote, self.spark_config
+        )
 
     @property
     def spark_session(self) -> Any:
