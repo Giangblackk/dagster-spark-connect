@@ -88,3 +88,12 @@ Once your Dagster Daemon is running, you can start turning on schedules and sens
 The easiest way to deploy your Dagster project is to use Dagster Cloud.
 
 Check out the [Dagster Cloud Documentation](https://docs.dagster.cloud) to learn more.
+
+## TODO
+- [x] Write custom `ConfigurableResource` to create Spark Connect Session
+- [ ] Write unit tests for assets
+- [ ] Write e2e tests using `testcontainers`
+- [ ] Implement new DeltaLake IO Manager
+- [ ] Use object storage container (e.g. Minio) for storing assets in longer term
+- [ ] Use lakeFS for Data Version Control
+- [ ] Write k8s Helm chart for deploy the whole platform in Kubernetes environment
