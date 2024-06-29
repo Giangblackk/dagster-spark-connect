@@ -96,4 +96,4 @@ Check out the [Dagster Cloud Documentation](https://docs.dagster.cloud) to learn
 - [ ] Implement new DeltaLake IO Manager
 - [ ] Use object storage container (e.g. Minio) for storing assets in longer term
 - [ ] Use lakeFS for Data Version Control
-- [ ] Write k8s Helm chart for deploy the whole platform in Kubernetes environment
+- [ ] Write k8s Helm chart for deploying the whole platform in Kubernetes environment
