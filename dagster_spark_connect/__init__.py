@@ -1,4 +1,9 @@
-from dagster import ConfigurableIOManager, Definitions, load_assets_from_modules
+from dagster import (
+    ConfigurableIOManager,
+    Definitions,
+    load_assets_from_modules,
+    OutputContext,
+)
 from pyspark.sql.connect.dataframe import DataFrame
 
 from . import assets
@@ -28,12 +33,30 @@ class ParquetIOManager(ConfigurableIOManager):
         return spark.read.parquet(self._get_path(context.upstream_output))
 
 
+class IcebergIOManager(ConfigurableIOManager):
+    pyspark: PySparkConnectResource
+
+    def _get_asset_name(self, context: OutputContext):
+        return context.asset_key.path[-1]
+
+    def handle_output(self, context, obj: DataFrame):
+        obj.write.format("iceberg").mode("overwrite").saveAsTable(
+            self._get_asset_name(context)
+        )
+
+    def load_input(self, context):
+        spark = self.pyspark.spark_session
+        return spark.read.format("iceberg").load(
+            self._get_asset_name(context.upstream_output)
+        )
+
+
 defs = Definitions(
     assets=all_assets,
     resources={
         "pyspark": pyspark_resource,
-        "io_manager": ParquetIOManager(
-            pyspark=pyspark_resource, path_prefix="/opt/spark/work-dir"
+        "io_manager": IcebergIOManager(
+            pyspark=pyspark_resource,
         ),
     },
 )
